@@ -1,5 +1,5 @@
 #!/bin/bash
-echo "big-data server install start up!"
+echo "big-data-server install start up!"
 
 sudo pip install -i https://pypi.tuna.tsinghua.edu.cn/simple apturl==0.5.2
 
