@@ -156,9 +156,10 @@
                 </div>
                 <div class="modal-body">
                     <div style="margin-left: 3%">
-                        填写应用名称：&nbsp;&nbsp;&nbsp;<input id="modal4" class="form-control" placeholder="填写应用名称" type="text" autofocus style="width: 220px;display: inline"><br><br>
-                        选择模型：&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<select id="modal2" class="selectpicker" data-live-search="true" data-live-search-placeholder="搜索" title="选择模型"></select><br><br><br>
+                        应用名称：&nbsp;&nbsp;&nbsp;<input id="modal4" class="form-control" placeholder="填写应用名称" type="text" autofocus style="width: 220px;display: inline"><br><br>
+                        选择模型：&nbsp;&nbsp;&nbsp;<select id="modal2" class="selectpicker" data-live-search="true" data-live-search-placeholder="搜索" title="选择模型"></select><br><br><br>
                         <div id="div1">选择数据源：<br><br></div><br>
+                        设备重复次数：&nbsp;&nbsp;&nbsp;<input id="modal5" class="form-control" placeholder="填写设备重复次数" type="text" style="width: 220px;display: inline"><br><br>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -290,6 +291,7 @@
             }
             var dataSource = [];
             var appName = $("#modal4").val();
+            var repeatTimes = $("#modal5").val();
             $("#div1").find("input[type=checkbox]:checked").each(
                 function () {
                     for (var i=0; i<deviceGroup.length; i++) {
@@ -299,11 +301,27 @@
                     }
                 }
             );
-            var url = "http://39.104.186.210:8092/api/app/create-app?tenantId=1&modelId="+modelId+"&dataSource=["+dataSource+"]&appName="+appName;
-            $.get(url,function (data) {
-                alert(JSON.stringify(data));
-                window.location.href = "predict.html";
-            })
+            if (repeatTimes > 1) {
+                if (dataSource.length == 1) {
+                    var tempDevice = [];
+                    for (var k=0; k<repeatTimes; k++) {
+                        tempDevice.push('"'+dataSource[0]+'"');
+                    }
+                    url = "http://39.104.186.210:8092/api/app/create-app?tenantId=1&modelId="+modelId+"&dataSource=["+tempDevice+"]&appName="+appName;
+                    $.get(url,function (data) {
+                        alert(JSON.stringify(data));
+                        window.location.href = "predict.html";
+                    })
+                }else {
+                    alert("只能选择一个设备，选择多个设备必须将设备重复次数清除或置1")
+                }
+            }else {
+                url = "http://39.104.186.210:8092/api/app/create-app?tenantId=1&modelId="+modelId+"&dataSource=["+dataSource+"]&appName="+appName;
+                $.get(url,function (data) {
+                    alert(JSON.stringify(data));
+                    window.location.href = "predict.html";
+                })
+            }
         }
     );
 
