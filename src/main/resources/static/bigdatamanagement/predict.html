@@ -144,6 +144,7 @@
             <!--<fieldset style="border:none;border-top:1px solid #cec9c9;margin:30px 0 20px;">
                 <legend style="font-size: 20px;font-weight: 300;padding: 0 10px;margin-left: 20px">查询结果</legend>
             </fieldset>-->
+
         </div>
     </div>
 
@@ -305,7 +306,7 @@
                 if (dataSource.length == 1) {
                     var tempDevice = [];
                     for (var k=0; k<repeatTimes; k++) {
-                        tempDevice.push('"'+dataSource[0]+'"');
+                        tempDevice.push(dataSource[0]);
                     }
                     url = "http://39.104.186.210:8092/api/app/create-app?tenantId=1&modelId="+modelId+"&dataSource=["+tempDevice+"]&appName="+appName;
                     $.get(url,function (data) {
