@@ -28,6 +28,15 @@ function formatDate(now) {
     return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second;
 }
 
+function formatDate1(now) {
+    var month=now.getMonth()+1;
+    var date=now.getDate();
+    var hour=now.getHours();
+    var minute=now.getMinutes();
+    var second=now.getSeconds();
+    return month+"-"+date+" "+hour+":"+minute+":"+second;
+}
+
 function fmtDate(obj){
     var date =  new Date(obj);
     //var y = 1900+date.getYear();

@@ -179,7 +179,7 @@
                     <h4 class="modal-title" id="myModalLabel1">预测结果</h4>
                 </div>
                 <div class="modal-body" id="modalbody">
-
+                    <div id="main" style="width: 550px;height:400px;color: black"></div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
@@ -191,6 +191,7 @@
 </div>
 
 <script src="js/jquery-3.3.1.js"></script>
+<script src="js/echarts.min.js"></script>
 <script src="js/bootstrap.js"></script>
 <script src="js/bootstrap-table.js"></script>
 <script src="js/bootstrap-table-zh-CN.js"></script>
@@ -346,10 +347,41 @@
     }
 
     function button4(dom) {
-        $.get("http://39.104.186.210:8092/api/app/real-predict?appId="+$(dom).parent().parent().children().eq(1).html(),function (data) {
-            $modalbody = $("#modalbody");
-            $modalbody.empty();
-            $modalbody.append(JSON.stringify(data));
+        var appId = $(dom).parent().parent().children().eq(1).html();
+        $.get("http://39.104.186.210:8092/api/app/real-predict?appId="+appId,function (data) {
+            if (data.status == "stoped!") {
+                $main = $("#main");
+                $main.empty();
+                $main.append(JSON.stringify(data));
+            }else {
+                var data1 = [];
+                for (var i=0; i<data.timestamp.length; i++) {
+                    data1.push(formatDate1(new Date(data.timestamp[i]*1000)));
+                }
+                $("#main").remove();
+                $("#modalbody").append($("<div id=\"main\" style=\"width: 550px;height:400px;color: black\"></div>"));
+                var myChart = echarts.init(document.getElementById('main'));
+                option = {
+                    title: {
+                        text: '应用id：'+ appId
+                    },
+                    xAxis: {
+                        name: '时间',
+                        type: 'category',
+                        data: data1
+                    },
+                    yAxis: {
+                        name: '结果',
+                        type: 'value'
+                    },
+                    series: [{
+                        data: data.predict,
+                        type: 'line',
+                        smooth: true
+                    }]
+                };
+                myChart.setOption(option);
+            }
         })
     }
 
